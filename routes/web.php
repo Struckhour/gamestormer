@@ -26,6 +26,14 @@ Route::post('/projects', [ProjectController::class, 'store'])
     ->middleware(['auth'])
     ->name('projects.store');
 
+Route::get('/projects/{project}', [ProjectController::class, 'show'])
+    ->middleware(['auth'])
+    ->name('projects.show');
+
+Route::post('/projects/{project}/invite', [ProjectController::class, 'inviteUser'])
+    ->middleware(['auth'])
+    ->name('projects.inviteUser');
+
 Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/users', [DashboardController::class, 'users'])->name('users.index');

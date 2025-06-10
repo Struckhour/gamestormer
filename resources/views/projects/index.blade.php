@@ -13,7 +13,7 @@
                 <div class="p-6 text-gray-900">
 
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-medium text-gray-900">All Your Projects</h3>
+                        <h3 class="text-lg font-medium text-gray-900">My Projects</h3>
                         <a href="{{ route('projects.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                             Create New Project
                         </a>
@@ -34,7 +34,11 @@
                             @foreach ($projects as $project)
                                 <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
                                     {{-- Project Name --}}
-                                    <h4 class="text-xl font-semibold text-gray-800 mb-2">{{ $project->name }}</h4>
+                                    <h4 class="text-xl font-semibold text-gray-800 mb-2">
+                                        <a href="{{ route('projects.show', $project) }}" class="text-blue-600 hover:underline">
+                                            {{ $project->name }}
+                                        </a>
+                                    </h4>
 
                                     {{-- Project Description --}}
                                     @if ($project->description)
