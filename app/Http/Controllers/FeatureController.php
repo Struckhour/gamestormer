@@ -110,7 +110,7 @@ class FeatureController extends Controller
 
         $request->validate([
             'title' => 'required|string|max:255',
-            'time_allotted' => 'required|integer|min:0',
+            'time_allotted' => 'nullable|integer|min:0',
             'department_id' => 'required|exists:departments,id',
             'subdepartment_id' => 'nullable|exists:subdepartments,id',
             'sort_order' => 'nullable|integer|min:0',

@@ -39,8 +39,8 @@
         </div>
 
         <div class="mb-4">
-            <x-input-label for="time_allotted" :value="__('Time Allotted (hours)')" />
-            <x-text-input id="time_allotted" class="block mt-1 w-full" type="number" name="time_allotted" :value="old('time_allotted')" required min="0" />
+            <x-input-label for="time_allotted" :value="__('Time Allotted (minutes)')" />
+            <x-text-input id="time_allotted" class="block mt-1 w-full" type="number" name="time_allotted" :value="old('time_allotted')" min="0" />
             <x-input-error :messages="$errors->get('time_allotted')" class="mt-2" />
         </div>
 
@@ -80,8 +80,18 @@
         </div>
 
         <div class="mb-4">
-            <x-input-label for="progress" :value="__('Progress Notes (Optional)')" />
-            <textarea id="progress" name="progress" rows="3" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('progress') }}</textarea>
+            <x-input-label for="progress" :value="__('Progress Status')" /> {{-- Updated label text --}}
+
+            <select id="progress"
+                    name="progress"
+                    class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                <!-- <option value="">-- Select Status --</option> {{-- Optional: A default, non-selectable option --}} -->
+                <option value="not started" {{ old('progress') == 'not started' ? 'selected' : '' }}>Not Started</option>
+                <option value="in progress" {{ old('progress') == 'in progress' ? 'selected' : '' }}>In Progress</option>
+                <option value="completed" {{ old('progress') == 'completed' ? 'selected' : '' }}>Completed</option>
+                <option value="stuck" {{ old('progress') == 'stuck' ? 'selected' : '' }}>Stuck</option>
+            </select>
+
             <x-input-error :messages="$errors->get('progress')" class="mt-2" />
         </div>
 

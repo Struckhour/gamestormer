@@ -1,7 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Project Details: ') . $project->name }}
+                        <a href="{{ route('projects.index') }}" class="underline hover:text-blue-800">My Projects</a>
+            >
+            <a href="{{ route('projects.show', $project) }}" class="underline hover:text-blue-800">{{$project->name}}</a>
         </h2>
     </x-slot>
 

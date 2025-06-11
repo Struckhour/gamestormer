@@ -1,7 +1,10 @@
 <x-project-features-layout :project="$project" :grouped-features="$groupedFeatures" :unassigned-features="$unassignedFeatures" :active-feature-id="null">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Features for ') . $project->name }}
+            <a href="{{ route('projects.index') }}" class="underline hover:text-blue-800">My Projects</a>
+            >
+            <a href="{{ route('projects.show', $project) }}" class="underline hover:text-blue-800">{{$project->name}}</a>
+            > Features
         </h2>
     </x-slot>
 
@@ -56,7 +59,7 @@
                                 </a>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $feature->time_allotted }} hours
+                                {{ $feature->time_allotted . $feature->time_allotted ? " minutes" : "" }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ $feature->department->name ?? 'N/A' }}

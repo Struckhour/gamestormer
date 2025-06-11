@@ -29,7 +29,7 @@
     {{-- Feature Details (already existing) --}}
     <div class="mb-4">
         <p class="text-gray-700 font-semibold mb-1">Time Allotted:</p>
-        <p class="text-gray-800">{{ $feature->time_allotted }} hours</p>
+        <p class="text-gray-800">{{ $feature->time_allotted }} minutes</p>
     </div>
 
     <div class="mb-4">
