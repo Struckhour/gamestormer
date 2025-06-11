@@ -2,8 +2,8 @@
 
 namespace App\View\Components;
 
-use App\Models\Project; // Make sure to import Project
-use Illuminate\Database\Eloquent\Collection; // For type hinting
+use App\Models\Project;
+use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 use Illuminate\View\View;
 
@@ -11,17 +11,20 @@ class ProjectFeaturesNav extends Component
 {
     public Project $project;
 
-    public Collection $features; // All features for the project (id, title)
+    public array $groupedFeatures; // Structured array of grouped features
 
-    public ?int $activeFeatureId; // ID of the feature currently being viewed/edited
+    public Collection $unassignedFeatures; // Collection of features with null department/subdepartment
+
+    public ?int $activeFeatureId;
 
     /**
      * Create a new component instance.
      */
-    public function __construct(Project $project, Collection $features, ?int $activeFeatureId = null)
+    public function __construct(Project $project, array $groupedFeatures, Collection $unassignedFeatures, ?int $activeFeatureId = null)
     {
         $this->project = $project;
-        $this->features = $features;
+        $this->groupedFeatures = $groupedFeatures;
+        $this->unassignedFeatures = $unassignedFeatures;
         $this->activeFeatureId = $activeFeatureId;
     }
 

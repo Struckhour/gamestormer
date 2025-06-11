@@ -1,4 +1,4 @@
-<x-project-features-layout :project="$project" :features="$allProjectFeatures" :active-feature-id="$feature->id">
+<x-project-features-layout :project="$project" :grouped-features="$groupedFeatures" :unassigned-features="$unassignedFeatures" :active-feature-id="$feature->id">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Edit Feature: ') . $feature->title . ' for Project: ' . $project->name }}
@@ -8,7 +8,8 @@
     <x-slot name="sidebar">
         <x-project-features-nav
             :project="$project"
-            :features="$allProjectFeatures"
+            :grouped-features="$groupedFeatures"
+            :unassigned-features="$unassignedFeatures"
             :active-feature-id="$feature->id"
         />
     </x-slot>

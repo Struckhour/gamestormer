@@ -8,7 +8,10 @@ export default {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
     ],
-
+    safelist: [
+        'rotate-90',
+        'rotate-0', // Good to include for explicit reset if ever needed
+    ],
     theme: {
         extend: {
             fontFamily: {

@@ -16,12 +16,60 @@ class FeatureController extends Controller
     {
         $project->load('users'); // Ensure users are loaded for auth checks
 
-        // Get all features for the current project, only title and id for sidebar
-        $allProjectFeatures = $project->features()->select('id', 'title')->orderBy('sort_order')->get();
+        // Get all features for the current project, eager-loaded with department and subdepartment
+        // and grouped for the navigation tree.
+        $features = $project->features()
+            ->with(['department', 'subdepartment'])
+            ->orderBy('sort_order')
+            ->get();
+
+        $groupedFeatures = [];
+        $unassignedFeatures = collect();
+
+        // Group features by Department and Subdepartment
+        foreach ($features as $feature) {
+            if ($feature->department && $feature->subdepartment) {
+                // Ensure department exists in groupedFeatures
+                if (! isset($groupedFeatures[$feature->department->id])) {
+                    $groupedFeatures[$feature->department->id] = [
+                        'name' => $feature->department->name,
+                        'subdepartments' => [],
+                    ];
+                }
+                // Ensure subdepartment exists within the department
+                if (! isset($groupedFeatures[$feature->department->id]['subdepartments'][$feature->subdepartment->id])) {
+                    $groupedFeatures[$feature->department->id]['subdepartments'][$feature->subdepartment->id] = [
+                        'name' => $feature->subdepartment->name,
+                        'features' => [],
+                    ];
+                }
+                $groupedFeatures[$feature->department->id]['subdepartments'][$feature->subdepartment->id]['features'][] = $feature;
+            } elseif ($feature->department) {
+                // Features with a department but no subdepartment
+                if (! isset($groupedFeatures[$feature->department->id])) {
+                    $groupedFeatures[$feature->department->id] = [
+                        'name' => $feature->department->name,
+                        'subdepartments' => [], // Still include subdepartments key even if empty for this group
+                        'features_no_subdepartment' => [], // For features directly under department
+                    ];
+                }
+                $groupedFeatures[$feature->department->id]['features_no_subdepartment'][] = $feature;
+            } else {
+                // Features with no department or subdepartment (null)
+                $unassignedFeatures->push($feature);
+            }
+        }
+
+        // Sort departments, subdepartments, and features within groups if necessary (optional)
+        // For simplicity, we are relying on the order of iteration here.
+        // If specific sorting is needed, you can implement it here.
+        // For example, sorting departments by name:
+        // uksort($groupedFeatures, fn($a, $b) => strcmp($groupedFeatures[$a]['name'], $groupedFeatures[$b]['name']));
 
         return [
             'project' => $project,
-            'allProjectFeatures' => $allProjectFeatures,
+            'groupedFeatures' => $groupedFeatures, // The newly structured data
+            'unassignedFeatures' => $unassignedFeatures, // Features with null department/subdepartment
             'activeFeatureId' => $activeFeature ? $activeFeature->id : null,
             'isCreator' => ($project->created_by === Auth::id()),
             'isAssigned' => $project->users->contains(Auth::id()),
