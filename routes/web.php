@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SubdepartmentController;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,13 @@ Route::get('/projects/{project}', [ProjectController::class, 'show'])
 Route::post('/projects/{project}/invite', [ProjectController::class, 'inviteUser'])
     ->middleware(['auth'])
     ->name('projects.inviteUser');
+
+// Public Project Features Routes (Accessible by Project Creator/Assigned Users)
+Route::middleware(['auth'])->group(function () {
+    // Nested resource for features under projects
+    // Routes will be like: /projects/{project}/features, /projects/{project}/features/create, etc.
+    Route::resource('projects.features', FeatureController::class); // No 'except' for now, full CRUD
+});
 
 Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

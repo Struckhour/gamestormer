@@ -21,4 +21,12 @@ class Department extends Model
     {
         return $this->hasMany(Subdepartment::class);
     }
+
+    /**
+     * A department can have many features.
+     */
+    public function features(): HasMany
+    {
+        return $this->hasMany(Feature::class);
+    }
 }

@@ -11,14 +11,19 @@
                 <div class="p-6 text-gray-900">
 
                     <h3 class="text-2xl font-bold mb-4">{{ $project->name }}</h3>
-
                     <div class="mb-4">
                         <p class="text-gray-700 font-semibold mb-1">Description:</p>
                         @if ($project->description)
-                            <p class="text-gray-800">{{ $project->description }}</p>
+                        <p class="text-gray-800">{{ $project->description }}</p>
                         @else
-                            <p class="text-gray-500 italic">No description provided.</p>
+                        <p class="text-gray-500 italic">No description provided.</p>
                         @endif
+                    </div>
+                    {{-- Link to Features --}}
+                    <div class="mt-6 pt-6 border-t border-gray-200">
+                        <a href="{{ route('projects.features.index', $project) }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            View/Manage Features
+                        </a>
                     </div>
 
 

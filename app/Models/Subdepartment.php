@@ -23,4 +23,12 @@ class Subdepartment extends Model
     {
         return $this->belongsTo(Department::class);
     }
+
+    /**
+     * A subdepartment can have many features.
+     */
+    public function features(): HasMany
+    {
+        return $this->hasMany(Feature::class);
+    }
 }
