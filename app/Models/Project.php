@@ -35,4 +35,9 @@ class Project extends Model
     {
         return $this->hasMany(Feature::class);
     }
+
+    public function media()
+    {
+        return $this->hasMany(Media::class);
+    }
 }

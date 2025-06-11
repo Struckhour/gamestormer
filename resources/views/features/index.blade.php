@@ -55,11 +55,11 @@
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                 <a href="{{ route('projects.features.show', [$project, $feature]) }}" class="text-blue-600 hover:underline">
-                                    {{ $feature->title }}
+                                    {{ mb_strlen($feature->title) > 20 ? mb_substr($feature->title, 0, 20) . '...' : $feature->title; }}
                                 </a>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $feature->time_allotted . $feature->time_allotted ? " minutes" : "" }}
+                                {{ $feature->time_allotted ? $feature->time_allotted . " min." : "" }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ $feature->department->name ?? 'N/A' }}

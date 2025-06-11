@@ -60,4 +60,9 @@ class Feature extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function media()
+    {
+        return $this->hasMany(Media::class);
+    }
 }

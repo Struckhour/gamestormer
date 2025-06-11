@@ -83,7 +83,7 @@ class FeatureController extends Controller
             abort(403, 'Unauthorized action. You do not have access to this project\'s features.');
         }
 
-        $features = $project->features()->with(['department', 'subdepartment'])->orderBy('sort_order')->get();
+        $features = $project->features()->with(['department', 'subdepartment'])->orderByRaw('deadline IS NULL, deadline ASC')->get();
 
         return view('features.index', array_merge($data, compact('features')));
     }

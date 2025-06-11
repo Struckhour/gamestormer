@@ -29,7 +29,7 @@
             @endif
 
             <!-- Page Content -->
-            <main>
+            <main class="bg-[url('/public/forest_bg.png')] bg-cover bg-center min-h-screen">
                 {{ $slot }}
             </main>
         </div>

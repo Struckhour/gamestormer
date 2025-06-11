@@ -1,15 +1,11 @@
 <x-app-layout>
     {{-- Header Slot --}}
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('My Projects') }}
-        </h2>
-    </x-slot>
+
 
     {{-- Main Content Area --}}
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+    <div class="py-12 bg-opacity-50">
+        <div class="max-w-full mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white bg-opacity-80 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
 
                     <div class="flex justify-between items-center mb-6">
@@ -46,7 +42,15 @@
                                     @else
                                         <p class="text-gray-500 text-sm mb-3 italic">No description provided.</p>
                                     @endif
-
+                                    @if ($project->media)
+                                        @foreach ($project->media as $media)
+                                            <img 
+                                                src="{{ asset('storage/' . $media->path) }}" 
+                                                alt="{{ $media->original_name }}" 
+                                                class="rounded mb-4 max-w-full h-auto"
+                                            >
+                                        @endforeach
+                                    @endif
                                     <div class="text-xs text-gray-500">
                                         Created: {{ $project->created_at->format('M d, Y H:i') }}
                                     </div>

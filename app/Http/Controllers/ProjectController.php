@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Media;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -14,6 +16,9 @@ class ProjectController extends Controller
         $userId = Auth::id();
 
         $projects = Project::where('created_by', $userId)
+            ->orWhereHas('users', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -27,18 +32,35 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'project_image' => 'nullable|image|max:2048|mimes:jpeg,png,gif,svg', // 2MB max, common image types
         ]);
 
-        Project::create([
-            'created_by' => auth()->id(),
-            'name' => $request->name,
-            'description' => $request->description,
-        ]);
+        $validatedData['created_by'] = Auth::id();
+        $project = Project::create($validatedData);
 
-        return redirect()->route('projects.create')->with('success', 'Project created successfully!');
+        if ($request->hasFile('media')) {
+            $uploadedFile = $request->file('media');
+
+            // Store the file in the 'public' disk, under 'uploads/projects/media' directory
+            // This will put files in storage/app/public/uploads/projects/media
+            $path = $uploadedFile->store('uploads/projects/media', 'public');
+
+            // Save file metadata to the 'media' table
+            $media = new Media;
+            $media->project_id = $project->id; // Link to the newly created project
+            $media->file_name = basename($path); // Get just the file name from the path
+            $media->original_name = $uploadedFile->getClientOriginalName();
+            $media->mime_type = $uploadedFile->getMimeType();
+            $media->path = $path; // Store the full relative path
+            $media->size = $uploadedFile->getSize();
+            $media->save();
+        }
+
+        // 4. Redirect or return response
+        return redirect()->route('projects.show', $project)->with('success', 'Project created successfully!');
     }
 
     /**
