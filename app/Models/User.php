@@ -61,4 +61,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Project::class)
             ->withPivot('attached_by_user_id', 'created_at', 'updated_at');
     }
+
+    /**
+     * A user can create many comments.
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'created_by');
+    }
 }

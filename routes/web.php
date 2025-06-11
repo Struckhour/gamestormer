@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\ProjectController;
@@ -42,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
     // Nested resource for features under projects
     // Routes will be like: /projects/{project}/features, /projects/{project}/features/create, etc.
     Route::resource('projects.features', FeatureController::class); // No 'except' for now, full CRUD
+    Route::resource('projects.features.comments', CommentController::class)->only(['store', 'destroy']);
 });
 
 Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(function () {
