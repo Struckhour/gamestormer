@@ -69,4 +69,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class, 'created_by');
     }
+
+    public function features()
+    {
+        return $this->belongsToMany(Feature::class)->withTimestamps();
+    }
 }

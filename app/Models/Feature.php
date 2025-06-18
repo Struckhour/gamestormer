@@ -65,4 +65,14 @@ class Feature extends Model
     {
         return $this->hasMany(Media::class);
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
 }

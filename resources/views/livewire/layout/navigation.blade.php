@@ -12,7 +12,7 @@ new class extends Component
     {
         $logout();
 
-        $this->redirect('/', navigate: true);
+        $this->redirect('/login', navigate: true);
     }
 }; ?>
 
@@ -20,24 +20,35 @@ new class extends Component
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <div class="flex">
+            <div class="flex flex-1">
                 <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('projects.index') }}" wire:navigate>
-                        <img src="{{ asset('contra_favicon.png') }}" alt="My Company Logo" class="block h-9 w-auto">
-                    </a>
+                <div class="flex px-4">    
+                    <div class="shrink-0 flex items-center">
+                        <a href="{{ route('projects.index') }}" wire:navigate>
+                            <img src="{{ asset('contra_favicon.png') }}" alt="My Company Logo" class="block h-9 w-auto">
+                        </a>
+                    </div>
+                    <div class="hidden sm:flex items-center ms-4">
+                        <a href="{{ route('projects.index') }}" class="font-semibold text-green-950 text-3xl font-pixelify">GameStormer</a>
+                    </div>
                 </div>
+                <div class="flex justify-start flex-1 px-12">
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <!-- <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
-                    </x-nav-link> -->
-                    @if (Auth::user()->isAdmin())
+                    <!-- Navigation Links -->
+                    <div class="hidden space-x-6 sm:-my-px sm:ms-6 sm:flex">
+                        @if (Auth::user()->isAdmin())
                         <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                             {{ __('Admin Panel') }}
                         </x-nav-link>
-                    @endif
+                        @endif
+                    </div>
+                    <div class="hidden sm:flex items-center mx-4">
+                        <a href="{{ route('projects.index') }}" class="font-semibold text-blue-900 text-lg hover:underline">Projects</a>
+                    </div>
+                    <div class="hidden sm:flex items-center mx-4">
+                        <a href="{{ route('my-tasks') }}" class="font-semibold text-blue-900 text-lg hover:underline">My Tasks</a>
+                    </div>
+
                 </div>
             </div>
 

@@ -49,14 +49,48 @@
     </div>
     @endif
 
-    <div class="mb-4">
-        <p class="text-gray-700 font-semibold mb-1">Progress:</p>
-        @if ($feature->progress)
-            <p class="text-gray-800">{{ $feature->progress }}</p>
-        @else
-            <p class="text-gray-500 italic">No progress notes provided.</p>
-        @endif
-    </div>
+
+    <h3 class="font-semibold mb-2">Assigned Team Members:</h3>
+    <ul>
+        @foreach ($feature->users as $user)
+            <li class="flex items-center gap-2">
+                <form action="{{ route('feature-user.remove') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="feature_id" value="{{ $feature->id }}">
+                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                    <button type="submit" class="text-black hover:text-red-800 hover:bg-gray-400 my-2 rounded text-base w-4 bg-gray-200 border border-black">×</button>
+                </form>
+                <span>{{ $user->name }}</span>
+            </li>
+        @endforeach
+    </ul>
+
+    <form action="{{ route('feature-user.assign') }}" method="POST" id="assign-user-form">
+        @csrf
+        <input type="hidden" name="feature_id" value="{{ $feature->id }}">
+
+        <label for="user_id">Assign a team member:</label>
+        <select name="user_ids[]" id="user_id" onchange="document.getElementById('assign-user-form').submit()" class="py-1 rounded">
+            <option value="">{{!$availableUsers->isEmpty() ? '-- Select a project member --' : 'All members have been assigned'}}</option>
+            @foreach ($availableUsers as $user)
+                <option value="{{ $user->id }}">{{ $user->name }}</option>
+            @endforeach
+        </select>
+    </form>
+
+    <form action="{{ route('feature.assignStatus') }}" method="POST" class ="py-2">
+        @csrf
+        <input type="hidden" name="feature_id" value="{{ $feature->id }}">
+
+        <label for="status_id">Progress Status:</label>
+        <select name="status_id" id="status_id" class="py-1 rounded">
+            @foreach ($statuses as $status)
+                <option value="{{ $status->id }}" @selected($feature->status_id == $status->id)>
+                    {{ $status->name }}
+                </option>
+            @endforeach
+        </select>
+    </form>
 
     <div class="mb-4">
         <p class="text-gray-700 font-semibold mb-1">Content:</p>

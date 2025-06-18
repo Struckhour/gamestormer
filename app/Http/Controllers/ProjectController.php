@@ -30,6 +30,20 @@ class ProjectController extends Controller
         return view('projects.create');
     }
 
+    public function edit(Project $project)
+    {
+        $project->load('users'); // Eager load the 'users' relationship here
+
+        $isCreator = ($project->created_by === Auth::id());
+        $isAssigned = $project->users->contains(Auth::id()); // Check if the current user is in the assigned users collection
+
+        if (! $isCreator && ! $isAssigned) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return view('projects.edit', compact('project'));
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -61,6 +75,42 @@ class ProjectController extends Controller
 
         // 4. Redirect or return response
         return redirect()->route('projects.show', $project)->with('success', 'Project created successfully!');
+    }
+
+    public function update(Request $request, Project $project)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'media' => 'nullable|image|max:2048', // Max 2MB
+        ]);
+
+        // Update basic fields
+        $project->name = $validated['name'];
+        $project->description = $validated['description'] ?? null;
+
+        // Handle media upload
+        if ($request->hasFile('media')) {
+            $uploadedFile = $request->file('media');
+
+            $path = $uploadedFile->store('uploads/projects/media', 'public');
+
+            // Save file metadata to the 'media' table
+            $media = new Media;
+            $media->project_id = $project->id; // Link to the newly created project
+            $media->file_name = basename($path); // Get just the file name from the path
+            $media->original_name = $uploadedFile->getClientOriginalName();
+            $media->mime_type = $uploadedFile->getMimeType();
+            $media->path = $path; // Store the full relative path
+            $media->size = $uploadedFile->getSize();
+            $media->save();
+        }
+
+        $project->save();
+
+        return redirect()
+            ->route('projects.show', $project)
+            ->with('success', 'Project updated successfully.');
     }
 
     /**
