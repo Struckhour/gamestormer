@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: spritebord
+    env: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        value: base64:sVS6je2d/ibwM2IqxFgxvCF1EO9Dtl06ClnhclDMVhM=
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        value: <PlanetScale DB host>
+      - key: DB_PORT
+        value: 3306
+      - key: DB_DATABASE
+        value: <PlanetScale DB name>
+      - key: DB_USERNAME
+        value: <PlanetScale DB user>
+      - key: DB_PASSWORD
+        value: <PlanetScale DB password>
+      - key: FILESYSTEM_DISK
+        value: public
