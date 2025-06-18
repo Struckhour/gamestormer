@@ -61,7 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('projects.features.comments', CommentController::class)->only(['store', 'destroy']);
     Route::post('/feature-user/assign', [FeatureUserController::class, 'assign'])->name('feature-user.assign');
     Route::post('/feature-user/remove', [FeatureUserController::class, 'remove'])->name('feature-user.remove');
-    Route::post('/feature/assign-status', [FeatureUserController::class, 'assignStatus'])->name('feature.assignStatus');
+    Route::post('/feature/assign-status', [FeatureController::class, 'assignStatus'])->name('feature.assignStatus');
 
 });
 

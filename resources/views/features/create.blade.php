@@ -80,18 +80,14 @@
         </div>
 
         <div class="mb-4">
-            <x-input-label for="progress" :value="__('Progress Status')" /> {{-- Updated label text --}}
-
-            <select id="progress"
-                    name="progress"
-                    class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                <!-- <option value="">-- Select Status --</option> {{-- Optional: A default, non-selectable option --}} -->
-                <option value="not started" {{ old('progress') == 'not started' ? 'selected' : '' }}>Not Started</option>
-                <option value="in progress" {{ old('progress') == 'in progress' ? 'selected' : '' }}>In Progress</option>
-                <option value="completed" {{ old('progress') == 'completed' ? 'selected' : '' }}>Completed</option>
-                <option value="stuck" {{ old('progress') == 'stuck' ? 'selected' : '' }}>Stuck</option>
+            <x-input-label for="status_id" :value="__('Progress Status')" />
+            <select name="status_id" id="status_id" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                @foreach ($statuses as $status)
+                    <option value="{{ $status->id }}">
+                        {{ $status->name }}
+                    </option>
+                @endforeach
             </select>
-
             <x-input-error :messages="$errors->get('progress')" class="mt-2" />
         </div>
 

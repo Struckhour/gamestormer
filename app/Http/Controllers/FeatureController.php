@@ -98,8 +98,9 @@ class FeatureController extends Controller
 
         $departments = Department::all();
         $subdepartments = Subdepartment::all(); // Or dynamically load with JS later
+        $statuses = Status::all();
 
-        return view('features.create', array_merge($data, compact('departments', 'subdepartments')));
+        return view('features.create', array_merge($data, compact('departments', 'subdepartments', 'statuses')));
     }
 
     public function store(Request $request, Project $project)
@@ -178,8 +179,9 @@ class FeatureController extends Controller
 
         $departments = Department::all();
         $subdepartments = Subdepartment::where('department_id', $feature->department_id)->get();
+        $statuses = Status::all();
 
-        return view('features.edit', array_merge($data, compact('feature', 'departments', 'subdepartments')));
+        return view('features.edit', array_merge($data, compact('feature', 'departments', 'subdepartments', 'statuses')));
     }
 
     public function update(Request $request, Project $project, Feature $feature)

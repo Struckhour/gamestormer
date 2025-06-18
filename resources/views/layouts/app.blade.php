@@ -5,8 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'GameStormer') }}</title>
-        <link rel="icon" href="{{ asset('contra_favicon.png') }}">
+        <title>{{ config('app.name', 'SpriteBord') }}</title>
+        <link rel="icon" href="{{ asset('knight.png') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -32,7 +32,7 @@
             @endif
 
             <!-- Page Content -->
-            <main class="bg-[url('/public/forest_bg.png')] bg-cover bg-center min-h-screen">
+            <main class="bg-[url('/public/dark_forest.png')] bg-cover bg-center min-h-screen">
                 {{ $slot }}
             </main>
         </div>

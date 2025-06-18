@@ -16,6 +16,16 @@
                             <span class="block sm:inline">{{ session('success') }}</span>
                         </div>
                     @endif
+                    @if ($errors->any())
+                        <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                            <strong>Whoops! Something went wrong.</strong>
+                            <ul class="mt-2 list-disc list-inside">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Project Details</h3>
 

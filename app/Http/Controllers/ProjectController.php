@@ -46,6 +46,9 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'media' => 'nullable|file|mimes:jpg,jpeg,png,gif,svg|max:2048', // max 2048 KB = 2MB
+        ]);
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -53,6 +56,7 @@ class ProjectController extends Controller
         ]);
 
         $validatedData['created_by'] = Auth::id();
+
         $project = Project::create($validatedData);
 
         if ($request->hasFile('media')) {
@@ -79,38 +83,47 @@ class ProjectController extends Controller
 
     public function update(Request $request, Project $project)
     {
-        $validated = $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'media' => 'nullable|image|max:2048', // Max 2MB
+            'media.*' => 'nullable|image|max:2048|mimes:jpeg,png,gif,svg',
+            'delete_media' => 'array', // Optional array of media IDs to delete
+            'delete_media.*' => 'integer|exists:media,id',
         ]);
 
-        // Update basic fields
-        $project->name = $validated['name'];
-        $project->description = $validated['description'] ?? null;
+        // Update project details
+        $project->update([
+            'name' => $validatedData['name'],
+            'description' => $validatedData['description'] ?? null,
+        ]);
 
-        // Handle media upload
-        if ($request->hasFile('media')) {
-            $uploadedFile = $request->file('media');
+        // Delete selected media
+        if ($request->has('delete_media')) {
+            $mediaToDelete = Media::whereIn('id', $validatedData['delete_media'])->where('project_id', $project->id)->get();
 
-            $path = $uploadedFile->store('uploads/projects/media', 'public');
-
-            // Save file metadata to the 'media' table
-            $media = new Media;
-            $media->project_id = $project->id; // Link to the newly created project
-            $media->file_name = basename($path); // Get just the file name from the path
-            $media->original_name = $uploadedFile->getClientOriginalName();
-            $media->mime_type = $uploadedFile->getMimeType();
-            $media->path = $path; // Store the full relative path
-            $media->size = $uploadedFile->getSize();
-            $media->save();
+            foreach ($mediaToDelete as $media) {
+                Storage::disk('public')->delete($media->path); // Delete file from disk
+                $media->delete(); // Remove DB entry
+            }
         }
 
-        $project->save();
+        // Handle new media uploads
+        if ($request->hasFile('media')) {
+            foreach ($request->file('media') as $uploadedFile) {
+                $path = $uploadedFile->store('uploads/projects/media', 'public');
 
-        return redirect()
-            ->route('projects.show', $project)
-            ->with('success', 'Project updated successfully.');
+                Media::create([
+                    'project_id' => $project->id,
+                    'file_name' => basename($path),
+                    'original_name' => $uploadedFile->getClientOriginalName(),
+                    'mime_type' => $uploadedFile->getMimeType(),
+                    'path' => $path,
+                    'size' => $uploadedFile->getSize(),
+                ]);
+            }
+        }
+
+        return redirect()->route('projects.show', $project)->with('success', 'Project updated successfully!');
     }
 
     /**

@@ -31,7 +31,7 @@
                                 <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
                                     {{-- Project Name --}}
                                     <h4 class="text-xl font-semibold text-gray-800 mb-2">
-                                        <a href="{{ route('projects.show', $project) }}" class="text-blue-600 hover:underline">
+                                        <a href="{{ route('projects.features.index', $project) }}" class="text-blue-600 hover:underline">
                                             {{ $project->name }}
                                         </a>
                                     </h4>

@@ -5,9 +5,15 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 flex">
                     {{-- Left Sidebar for Feature Navigation --}}
-                    <div class="w-1/4 max-w-72 pr-6 border-r border-gray-200">
-                        <h4 class="text-lg font-semibold mb-4 text-gray-800">
-                            <a href="{{ route('projects.features.index', $project)}}" class="hover:text-blue-800 underline">{{$project->name}} Features</a></h4>
+                    <div class="w-1/4 max-w-96 pr-6 border-r border-gray-200">
+                        <div class="flex items-end justify-start gap-2">
+                            <h4 class="text-lg font-semibold text-gray-800">
+                                {{ $project->name }}
+                            </h4>
+                            <span class="text-sm text-blue-900">
+                                <a href="{{ route('projects.edit', $project) }}">(edit project details)</a>
+                            </span>
+                        </div>
                         {{ $sidebar ?? '' }} {{-- Slot for the sidebar content (our feature tree component) --}}
                     </div>
 

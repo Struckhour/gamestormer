@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'GameStormer'),
+    'name' => env('APP_NAME', 'SpriteBord'),
 
     /*
     |--------------------------------------------------------------------------

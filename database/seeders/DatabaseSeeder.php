@@ -4,8 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Support\Facades\DB;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,7 +19,11 @@ class DatabaseSeeder extends Seeder
 
         User::updateOrCreate(
             ['email' => 'test@example.com'], // lookup condition
-            ['name' => 'Test User']          // values to update/create
+            [
+                'name' => 'Test User',
+                'password' => Hash::make('asdfasdf'),          // values to update/create
+                'is_admin' => 1,
+            ],
         );
 
         DB::table('statuses')->insert([
@@ -26,6 +31,15 @@ class DatabaseSeeder extends Seeder
             ['name' => 'In Progress'],
             ['name' => 'Stuck'],
             ['name' => 'Complete'],
+        ]);
+
+        DB::table('departments')->insert([
+            ['name' => 'Animation'],
+            ['name' => 'Code'],
+            ['name' => 'Sound'],
+            ['name' => 'Concept'],
+            ['name' => 'UI'],
+            ['name' => 'Other'],
         ]);
     }
 }
