@@ -1,25 +1,38 @@
 services:
   - type: web
-    name: spritebord
+    name: gamestormer-app
     env: docker
     plan: starter
+    region: ohio
     dockerfilePath: ./Dockerfile
+    buildCommand: ""
+    startCommand: ""
+    autoDeploy: true
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        value: base64:sVS6je2d/ibwM2IqxFgxvCF1EO9Dtl06ClnhclDMVhM=
+        generateValue: true
+      - key: APP_DEBUG
+        value: false
+      - key: LOG_CHANNEL
+        value: stderr
       - key: DB_CONNECTION
         value: mysql
       - key: DB_HOST
-        value: <PlanetScale DB host>
+        value: YOUR_DB_HOST
       - key: DB_PORT
         value: 3306
       - key: DB_DATABASE
-        value: <PlanetScale DB name>
+        value: YOUR_DB_NAME
       - key: DB_USERNAME
-        value: <PlanetScale DB user>
+        value: YOUR_DB_USER
       - key: DB_PASSWORD
-        value: <PlanetScale DB password>
+        value: YOUR_DB_PASS
       - key: FILESYSTEM_DISK
         value: public
+    disks:
+      - name: media
+        mountPath: /var/www/html/storage/app/public/uploads
+        sizeGB: 1
+

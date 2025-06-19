@@ -1,38 +1,23 @@
-# Use an official PHP image with extensions for Laravel
-FROM php:8.2-fpm
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    nginx \
-    libzip-dev \
-    mysql-client
-
-# Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
-
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Base image with PHP, Composer, and Laravel-ready extensions
+FROM laravelsail/php82-composer
 
 # Set working directory
-WORKDIR /var/www
+WORKDIR /var/www/html
 
-# Copy existing app files
+# Copy application code
 COPY . .
 
-# Install dependencies
+# Install PHP dependencies
 RUN composer install --optimize-autoloader --no-dev
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 755 /var/www/storage
+RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Expose port 9000 and run PHP-FPM server
-EXPOSE 9000
-CMD ["php-fpm"]
+# Laravel storage symlink
+RUN php artisan storage:link || true
+
+# Expose the port Laravel serves on
+EXPOSE 8000
+
+# Start the Laravel server
+CMD php artisan serve --host=0.0.0.0 --port=8000
