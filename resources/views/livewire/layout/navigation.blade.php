@@ -25,7 +25,7 @@ new class extends Component
                 <div class="flex px-4">    
                     <div class="shrink-0 flex items-center">
                         <a href="{{ route('projects.index') }}" wire:navigate>
-                            <img src="{{ asset('knight.png') }}" alt="My Company Logo" class="block h-9 w-auto">
+                            <img src="{{ asset('tiny-knight.png') }}" alt="My Company Logo" class="block h-9 w-auto">
                         </a>
                     </div>
                     <div class="hidden sm:flex items-center ms-4">

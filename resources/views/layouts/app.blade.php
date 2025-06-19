@@ -6,7 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'SpriteBord') }}</title>
-        <link rel="icon" href="{{ asset('knight.png') }}">
+        <link rel="icon" href="{{ asset('tiny-knight.png') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
