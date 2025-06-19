@@ -7,6 +7,9 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+
+# Ensure env is set
+ENV APP_URL=https://gamestormer.onrender.com
 RUN npm run build
 
 # Stage 2: Setup PHP Laravel app with PostgreSQL extension

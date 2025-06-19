@@ -32,7 +32,7 @@
             @endif
 
             <!-- Page Content -->
-            <main class="bg-[url('/public/dark_forest.png')] bg-cover bg-center min-h-screen">
+            <main class="bg-[url('/dark_forest.png')] bg-cover bg-center min-h-screen">
                 {{ $slot }}
             </main>
         </div>
