@@ -1,18 +1,36 @@
-# Stage 1: Build frontend assets with Node
-FROM node:18-alpine AS node-builder
+# Stage 1: Setup Laravel + Build assets
+FROM laravelsail/php82-composer AS app-builder
 
-WORKDIR /app
+# Install Node.js (you can also switch to a full image that has both PHP & Node)
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
 
-COPY package*.json ./
-RUN npm install
+# Install PostgreSQL client and PHP extension
+RUN apt-get update && apt-get install -y libpq-dev && \
+    docker-php-ext-install pdo_pgsql
 
+WORKDIR /var/www/html
+
+# Copy entire Laravel project
 COPY . .
 
-# Ensure env is set
+# Set environment variable
 ENV APP_URL=https://gamestormer.onrender.com
+
+# Install dependencies
+RUN composer install --optimize-autoloader --no-dev
+RUN npm install
+
+# Clear config/cache so Vite picks up fresh APP_URL
+RUN php artisan config:clear && \
+    php artisan route:clear && \
+    php artisan view:clear && \
+    php artisan optimize:clear
+
+# Build frontend
 RUN npm run build
 
-# Stage 2: Setup PHP Laravel app with PostgreSQL extension
+# Stage 2: Lightweight runtime image
 FROM laravelsail/php82-composer
 
 # Install PostgreSQL client and PHP extension
@@ -21,29 +39,16 @@ RUN apt-get update && apt-get install -y libpq-dev && \
 
 WORKDIR /var/www/html
 
-# Copy Laravel app files first
-COPY . .
+# Copy Laravel app from builder stage
+COPY --from=app-builder /var/www/html /var/www/html
 
-# Copy built frontend assets from node-builder last (overwrite public/build)
-COPY --from=node-builder /app/public/build ./public/build
-
-# Install PHP dependencies
-RUN composer install --optimize-autoloader --no-dev
-
-# Set permissions for Laravel storage and cache
+# Set permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
 RUN chmod -R 755 storage bootstrap/cache
 
-# Create storage symlink
+# Link storage
 RUN php artisan storage:link || true
 
-# Expose port 8000 (Laravel development server)
 EXPOSE 8000
 
-# Start Laravel dev server
-CMD php artisan config:clear && \
-    php artisan route:clear && \
-    php artisan view:clear && \
-    php artisan optimize:clear && \
-    php artisan serve --host=0.0.0.0 --port=8000
-
+CMD php artisan serve --host=0.0.0.0 --port=8000
