@@ -18,20 +18,24 @@ RUN apt-get update && apt-get install -y libpq-dev && \
 
 WORKDIR /var/www/html
 
-# Copy built frontend assets from node-builder
-COPY --from=node-builder /app/public/build ./public/build
-
-# Copy Laravel app files
+# Copy Laravel app files first
 COPY . .
+
+# Copy built frontend assets from node-builder last (overwrite public/build)
+COPY --from=node-builder /app/public/build ./public/build
 
 # Install PHP dependencies
 RUN composer install --optimize-autoloader --no-dev
 
+# Set permissions for Laravel storage and cache
 RUN chown -R www-data:www-data storage bootstrap/cache
 RUN chmod -R 755 storage bootstrap/cache
 
+# Create storage symlink
 RUN php artisan storage:link || true
 
+# Expose port 8000 (Laravel development server)
 EXPOSE 8000
 
+# Start Laravel dev server
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
