@@ -1,6 +1,10 @@
 # Base image with PHP, Composer, and Laravel-ready extensions
 FROM laravelsail/php82-composer
 
+# Install PostgreSQL client libraries and PHP PostgreSQL extension
+RUN apt-get update && apt-get install -y libpq-dev && \
+    docker-php-ext-install pdo_pgsql
+
 # Set working directory
 WORKDIR /var/www/html
 
